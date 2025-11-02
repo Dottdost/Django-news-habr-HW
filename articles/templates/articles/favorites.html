@@ -2,35 +2,206 @@
 {% block title %}Favorites{% endblock %}
 {% block content %}
 
-<h2 class="mb-4" style="color: var(--main-dark);">
-  <i class="bi bi-bookmark-heart-fill"></i> My Favorite Articles
-</h2>
+<div class="d-flex align-items-center gap-3 mb-4">
+    <div class="favorites-icon">
+        <i class="bi bi-bookmark-heart-fill"></i>
+    </div>
+    <div>
+        <h2 class="h4 mb-1 fw-bold" style="color: var(--main-dark);">My Favorite Articles</h2>
+        <p class="text-muted small mb-0">{{ articles.count }} saved articles</p>
+    </div>
+</div>
 
 {% for article in articles %}
-<div class="card mb-3 shadow-sm border-0 favorite-card" style="border-left: 5px solid var(--main); transition: 0.2s;">
-  <div class="card-body">
-    <a href="{% url 'article_detail' article.pk %}"
-       class="text-decoration-none fw-semibold"
-       style="color: var(--main-dark);">
-      {{ article.title }}
-    </a>
-    <p class="text-muted small mb-0">
-      <i class="bi bi-tags"></i> Category: {{ article.category }}
-    </p>
-  </div>
+<div class="card mb-3 shadow-sm border-0 favorite-card">
+    <div class="card-body py-3">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h6 class="card-title mb-2">
+                    <a href="{% url 'article_detail' article.pk %}" class="favorite-link">
+                        {{ article.title }}
+                    </a>
+                </h6>
+                <div class="favorite-meta">
+                    <span class="category-badge">
+                        <i class="bi bi-tag"></i> {{ article.category }}
+                    </span>
+                    <span class="text-muted mx-2">•</span>
+                    <span class="text-muted">
+                        <i class="bi bi-person"></i> {{ article.author.username }}
+                    </span>
+                    <span class="text-muted mx-2">•</span>
+                    <span class="text-muted">
+                        <i class="bi bi-calendar"></i> {{ article.created_at|date:"M d, Y" }}
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="favorite-stats">
+                    <span class="stat-item text-success">
+                        <i class="bi bi-hand-thumbs-up"></i> {{ article.likes }}
+                    </span>
+                    <span class="stat-item text-danger">
+                        <i class="bi bi-hand-thumbs-down"></i> {{ article.dislikes }}
+                    </span>
+                    <span class="stat-item text-warning">
+                        <i class="bi bi-star"></i> {{ article.avg_rating|default:"-" }}
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-1 text-end">
+                <a href="{% url 'toggle_bookmark' article.pk %}" class="remove-favorite-btn" title="Remove from favorites">
+                    <i class="bi bi-bookmark-x-fill"></i>
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
 {% empty %}
-  <div class="alert alert-warning d-flex justify-content-between align-items-center">
-    <span>You don't have any favorite articles yet.</span>
-    <a href="{% url 'home' %}" class="btn btn-main btn-sm">Browse articles</a>
-  </div>
+<div class="empty-favorites text-center py-5">
+    <div class="empty-icon mb-4">
+        <i class="bi bi-bookmark-x display-1" style="color: var(--main);"></i>
+    </div>
+    <h5 class="text-muted mb-3">No favorite articles yet</h5>
+    <p class="text-muted small mb-4">Start bookmarking articles you love to find them here later</p>
+    <a href="{% url 'home' %}" class="btn btn-main">
+        <i class="bi bi-compass"></i> Explore Articles
+    </a>
+</div>
 {% endfor %}
 
 <style>
+.favorites-icon {
+    width: 50px;
+    height: 50px;
+    background: var(--gradient);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.favorites-icon i {
+    font-size: 1.5rem;
+    color: white;
+}
+
+.favorite-card {
+    border-left: 4px solid var(--main);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background: white;
+}
+
 .favorite-card:hover {
-  transform: translateY(-3px);
-  opacity: 0.95;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(123, 30, 63, 0.15);
+}
+
+.favorite-link {
+    color: var(--main-dark);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+}
+
+.favorite-link:hover {
+    color: var(--main);
+}
+
+.favorite-meta {
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.category-badge {
+    background: rgba(123, 30, 63, 0.1);
+    color: var(--main-dark);
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.favorite-stats {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.stat-item {
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-weight: 500;
+}
+
+.remove-favorite-btn {
+    width: 32px;
+    height: 32px;
+    background: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.remove-favorite-btn:hover {
+    background: #dc3545;
+    color: white;
+    transform: scale(1.1);
+}
+
+.empty-favorites {
+    background: white;
+    border-radius: 16px;
+    padding: 3rem 2rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.empty-icon i {
+    opacity: 0.7;
+}
+
+.card-body.py-3 {
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+}
+
+@media (max-width: 768px) {
+    .favorite-meta {
+        gap: 0.5rem;
+    }
+
+    .favorite-meta .mx-2 {
+        display: none;
+    }
+
+    .favorite-stats {
+        justify-content: flex-start;
+        margin-top: 0.5rem;
+        gap: 10px;
+    }
+
+    .remove-favorite-btn {
+        margin-top: 0.5rem;
+        align-self: flex-start;
+    }
+
+    .favorite-card .row > div {
+        margin-bottom: 0.5rem;
+    }
 }
 </style>
-
 {% endblock %}

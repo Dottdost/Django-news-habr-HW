@@ -2,13 +2,182 @@
 {% block title %}Categories{% endblock %}
 
 {% block content %}
-<h2>Select a category</h2>
+<div class="text-center mb-5">
+    <h2 class="display-6 fw-bold" style="color: var(--main-dark);">
+        <i class="bi bi-grid-3x3-gap"></i> Categories
+    </h2>
+    <p class="text-muted">Choose a category to explore specialized content</p>
+</div>
 
-<div class="list-group mt-3">
-    {% for value,label in categories %}
-        <a href="{% url 'category_articles' value %}" class="list-group-item list-group-item-action">
-            {{ label }}
+<div class="row g-4">
+    {% for value, label in categories %}
+    <div class="col-md-6 col-lg-4">
+        <a href="{% url 'category_articles' value %}" class="category-card">
+            <div class="category-content">
+                <div class="category-icon">
+                    <i class="bi
+                        {% if value == 'backend' %}bi-server
+                        {% elif value == 'frontend' %}bi-layout-wtf
+                        {% elif value == 'AI' %}bi-cpu
+                        {% elif value == 'cyber-security' %}bi-shield-check
+                        {% elif value == 'cyber-sport' %}bi-trophy
+                        {% elif value == 'game-development' %}bi-controller
+                        {% else %}bi-code-square
+                        {% endif %}">
+                    </i>
+                </div>
+                <h5 class="category-title">{{ label }}</h5>
+                <p class="category-description">
+                    {% if value == 'backend' %}Server-side development, APIs and databases
+                    {% elif value == 'frontend' %}User interfaces, frameworks and design
+                    {% elif value == 'AI' %}Artificial Intelligence and Machine Learning
+                    {% elif value == 'cyber-security' %}Security, protection and ethical hacking
+                    {% elif value == 'cyber-sport' %}eSports, tournaments and gaming news
+                    {% elif value == 'game-development' %}Game design, engines and development
+                    {% else %}Explore all articles in this category
+                    {% endif %}
+                </p>
+                <div class="category-arrow">
+                    <i class="bi bi-arrow-right"></i>
+                </div>
+            </div>
         </a>
+    </div>
     {% endfor %}
 </div>
+
+<style>
+.category-card {
+    display: block;
+    text-decoration: none;
+    background: white;
+    border-radius: 16px;
+    padding: 2rem 1.5rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.category-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.category-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 35px rgba(123, 30, 63, 0.15);
+    border-color: var(--main);
+    text-decoration: none;
+}
+
+.category-card:hover::before {
+    transform: scaleX(1);
+}
+
+.category-content {
+    text-align: center;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.category-icon {
+    width: 70px;
+    height: 70px;
+    background: var(--gradient);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.category-card:hover .category-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.category-icon i {
+    font-size: 1.8rem;
+    color: white;
+}
+
+.category-title {
+    color: var(--main-dark);
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    transition: color 0.3s ease;
+}
+
+.category-card:hover .category-title {
+    color: var(--main);
+}
+
+.category-description {
+    color: #6c757d;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+}
+
+.category-arrow {
+    width: 40px;
+    height: 40px;
+    background: rgba(123, 30, 63, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.category-card:hover .category-arrow {
+    background: var(--main);
+    transform: translateX(5px);
+}
+
+.category-arrow i {
+    color: var(--main);
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+}
+
+.category-card:hover .category-arrow i {
+    color: white;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .category-card {
+        padding: 1.5rem 1rem;
+    }
+
+    .category-icon {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 1rem;
+    }
+
+    .category-icon i {
+        font-size: 1.5rem;
+    }
+
+    .category-title {
+        font-size: 1.1rem;
+    }
+}
+</style>
 {% endblock %}

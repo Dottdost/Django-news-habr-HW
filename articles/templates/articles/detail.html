@@ -2,50 +2,83 @@
 {% block title %}{{ article.title }}{% endblock %}
 {% block content %}
 
-<div class="card shadow-sm">
-  <img src="{{ article.image.url }}" class="card-img-top" alt="{{ article.title }}">
+<div class="card shadow-sm border-0 mb-4">
+  <div class="article-image-container">
+    <img src="{{ article.image.url }}" class="article-image mx-auto d-block" alt="{{ article.title }}">
+  </div>
   <div class="card-body">
-    <h3>{{ article.title }}</h3>
+    <h3 class="card-title">{{ article.title }}</h3>
     <p class="text-muted">
       Author: {{ article.author.username }} |
       Category: {{ article.category }} |
       {{ article.created_at|date:"d.m.Y H:i" }}
     </p>
     <hr>
-    <p>{{ article.content|linebreaks }}</p>
-<div class="mt-3">
+    <p class="card-text">{{ article.content|linebreaks }}</p>
 
-  {% if user.is_authenticated %}
+    <div class="mt-3">
+      {% if user.is_authenticated %}
+        <a href="{% url 'vote_article' article.pk 1 %}"
+           class="btn btn-sm {% if user_vote and user_vote.value == 1 %}btn-success{% else %}btn-outline-success{% endif %}">
+          <i class="bi bi-hand-thumbs-up{% if user_vote and user_vote.value == 1 %}-fill{% endif %}"></i>
+          {{ article.likes }}
+        </a>
 
+        <a href="{% url 'vote_article' article.pk -1 %}"
+           class="btn btn-sm {% if user_vote and user_vote.value == -1 %}btn-danger{% else %}btn-outline-danger{% endif %}">
+          <i class="bi bi-hand-thumbs-down{% if user_vote and user_vote.value == -1 %}-fill{% endif %}"></i>
+          {{ article.dislikes }}
+        </a>
 
-    <a href="{% url 'vote_article' article.pk 1 %}"
-       class="btn btn-sm {% if user_vote and user_vote.value == 1 %}btn-success{% else %}btn-outline-success{% endif %}">
-      <i class="bi bi-hand-thumbs-up{% if user_vote and user_vote.value == 1 %}-fill{% endif %}"></i>
-      {{ article.likes }}
-    </a>
+        <a href="{% url 'toggle_bookmark' article.pk %}"
+           class="btn btn-sm {% if is_bookmarked %}btn-warning{% else %}btn-outline-warning{% endif %}">
+          <i class="bi {% if is_bookmarked %}bi-star-fill{% else %}bi-star{% endif %}"></i>
+          Bookmark
+        </a>
 
-    <a href="{% url 'vote_article' article.pk -1 %}"
-       class="btn btn-sm {% if user_vote and user_vote.value == -1 %}btn-danger{% else %}btn-outline-danger{% endif %}">
-      <i class="bi bi-hand-thumbs-down{% if user_vote and user_vote.value == -1 %}-fill{% endif %}"></i>
-      {{ article.dislikes }}
-    </a>
+        {% if article.author == user %}
+          <a href="{% url 'edit_article' article.pk %}" class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-pencil-square"></i> Edit
+          </a>
+        {% endif %}
 
-
-    <a href="{% url 'toggle_bookmark' article.pk %}"
-       class="btn btn-sm {% if is_bookmarked %}btn-warning{% else %}btn-outline-warning{% endif %}">
-      <i class="bi {% if is_bookmarked %}bi-star-fill{% else %}bi-star{% endif %}"></i>
-      Bookmark
-    </a>
-
-    {% if article.author == user %}
-      <a href="{% url 'edit_article' article.pk %}" class="btn btn-outline-primary btn-sm">
-        <i class="bi bi-pencil-square"></i> Edit
-      </a>
-    {% endif %}
-
-  {% else %}
-    <p><a href="{% url 'login' %}">Login</a> to vote or bookmark</p>
-  {% endif %}
-
+      {% else %}
+        <p><a href="{% url 'login' %}">Login</a> to vote or bookmark</p>
+      {% endif %}
+    </div>
+  </div>
 </div>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.article-image-container {
+    width: 100%;
+    max-height: 300px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f8f9fa;
+    border-radius: 8px 8px 0 0;
+    padding: 20px;
+}
+
+.article-image {
+    max-width: 100%;
+    max-height: 260px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    object-position: center;
+    border-radius: 6px;
+}
+
+.card-body h3 {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+</style>
 {% endblock %}

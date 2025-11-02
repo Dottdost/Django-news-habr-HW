@@ -2,16 +2,152 @@
 {% block title %}{{ category|title }}{% endblock %}
 
 {% block content %}
-<h2>Category: {{ category|title }}</h2>
+<div class="d-flex align-items-center gap-3 mb-4">
+    <div class="category-header-icon">
+        <i class="bi
+            {% if category == 'backend' %}bi-server
+            {% elif category == 'frontend' %}bi-layout-wtf
+            {% elif category == 'AI' %}bi-cpu
+            {% elif category == 'cyber-security' %}bi-shield-check
+            {% elif category == 'cyber-sport' %}bi-trophy
+            {% elif category == 'game-development' %}bi-controller
+            {% else %}bi-folder
+            {% endif %}">
+        </i>
+    </div>
+    <div>
+        <h2 class="h4 mb-1 fw-bold" style="color: var(--main-dark);">{{ category|title }}</h2>
+        <p class="text-muted small mb-0">{{ articles.count }} articles</p>
+    </div>
+</div>
 
 {% for article in articles %}
-<div class="card mb-3 shadow-sm">
-  <div class="card-body">
-    <h5><a href="{% url 'article_detail' article.pk %}" class="text-dark">{{ article.title }}</a></h5>
-    <p class="text-muted">Author: {{ article.author.username }} | Rating: {{ article.avg_rating }}</p>
-  </div>
+<div class="card mb-3 shadow-sm border-0 article-category-card">
+    <div class="card-body py-3">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h6 class="card-title mb-2">
+                    <a href="{% url 'article_detail' article.pk %}" class="article-category-link">
+                        {{ article.title }}
+                    </a>
+                </h6>
+                <div class="article-meta-small">
+                    <span class="text-muted">
+                        <i class="bi bi-person"></i> {{ article.author.username }}
+                    </span>
+                    <span class="mx-2">•</span>
+                    <span class="text-muted">
+                        <i class="bi bi-star"></i> {{ article.avg_rating|default:"No ratings" }}
+                    </span>
+                    <span class="mx-2">•</span>
+                    <span class="text-muted">
+                        <i class="bi bi-clock"></i> {{ article.created_at|date:"M d, Y" }}
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <div class="article-stats-small">
+                    <span class="badge bg-success bg-opacity-10 text-success me-2">
+                        <i class="bi bi-hand-thumbs-up"></i> {{ article.likes }}
+                    </span>
+                    <span class="badge bg-danger bg-opacity-10 text-danger">
+                        <i class="bi bi-hand-thumbs-down"></i> {{ article.dislikes }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% empty %}
-<p>No articles yet in this category.</p>
+<div class="text-center py-5">
+    <i class="bi bi-folder-x display-4 text-muted mb-3"></i>
+    <h5 class="text-muted">No articles in this category yet</h5>
+    <p class="text-muted small">Be the first to publish an article in {{ category|title }}</p>
+</div>
 {% endfor %}
+
+<style>
+.category-header-icon {
+    width: 50px;
+    height: 50px;
+    background: var(--gradient);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.category-header-icon i {
+    font-size: 1.5rem;
+    color: white;
+}
+
+.article-category-card {
+    border-left: 3px solid var(--main);
+    transition: all 0.3s ease;
+    border-radius: 8px;
+}
+
+.article-category-card:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 15px rgba(123, 30, 63, 0.1);
+}
+
+.article-category-link {
+    color: var(--main-dark);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+.article-category-link:hover {
+    color: var(--main);
+}
+
+.article-meta-small {
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.article-stats-small {
+    font-size: 0.75rem;
+}
+
+.article-stats-small .badge {
+    padding: 0.3rem 0.6rem;
+    font-weight: 500;
+}
+
+.card-body.py-3 {
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+}
+
+@media (max-width: 768px) {
+    .article-meta-small {
+        gap: 0.5rem;
+    }
+
+    .article-meta-small span.mx-2 {
+        display: none;
+    }
+
+    .article-stats-small {
+        margin-top: 0.5rem;
+        text-align: left !important;
+    }
+
+    .category-header-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .category-header-icon i {
+        font-size: 1.2rem;
+    }
+}
+</style>
 {% endblock %}

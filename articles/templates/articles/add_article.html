@@ -2,12 +2,218 @@
 {% block title %}Create Article{% endblock %}
 
 {% block content %}
-<h2 class="mb-4" style="color:#7b1e3f;">Create Article</h2>
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="d-flex align-items-center gap-3 mb-4">
+            <div class="create-header-icon">
+                <i class="bi bi-pencil-square"></i>
+            </div>
+            <div>
+                <h2 class="h4 mb-1 fw-bold" style="color: var(--main-dark);">Create New Article</h2>
+                <p class="text-muted small mb-0">Share your knowledge with the community</p>
+            </div>
+        </div>
 
-<form method="post" enctype="multipart/form-data" class="p-4 rounded shadow-sm bg-white">
-  {% csrf_token %}
-  {{ form.as_p }}
+        <form method="post" enctype="multipart/form-data" class="create-article-form">
+            {% csrf_token %}
 
-  <button type="submit" class="btn btn-main mt-3">Publish</button>
-</form>
+            <div class="form-card">
+                <div class="form-section">
+                    <label class="form-label">Title</label>
+                    {{ form.title }}
+                </div>
+
+                <div class="form-section">
+                    <label class="form-label">Category</label>
+                    {{ form.category }}
+                </div>
+
+                <div class="form-section">
+                    <label class="form-label">Content</label>
+                    {{ form.content }}
+                    <div class="form-text">Use clear formatting and markdown for better readability</div>
+                </div>
+
+                <div class="form-section">
+                    <label class="form-label">Article Image</label>
+                    <div class="image-upload-container">
+                        {{ form.image }}
+                        <div class="upload-placeholder">
+                            <i class="bi bi-image"></i>
+                            <span>Click to upload image</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-publish">
+                    <i class="bi bi-send"></i> Publish Article
+                </button>
+                <a href="{% url 'home' %}" class="btn btn-cancel">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.create-header-icon {
+    width: 50px;
+    height: 50px;
+    background: var(--gradient);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.create-header-icon i {
+    font-size: 1.5rem;
+    color: white;
+}
+
+.create-article-form {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+.form-card {
+    padding: 2rem;
+}
+
+.form-section {
+    margin-bottom: 2rem;
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--main-dark);
+    margin-bottom: 0.5rem;
+    display: block;
+    font-size: 0.95rem;
+}
+
+.form-section input,
+.form-section select,
+.form-section textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.form-section input:focus,
+.form-section select:focus,
+.form-section textarea:focus {
+    outline: none;
+    border-color: var(--main);
+    box-shadow: 0 0 0 3px rgba(123, 30, 63, 0.1);
+}
+
+.form-section textarea {
+    min-height: 200px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+.form-text {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-top: 0.5rem;
+}
+
+.image-upload-container {
+    position: relative;
+    border: 2px dashed #dee2e6;
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.image-upload-container:hover {
+    border-color: var(--main);
+    background: rgba(123, 30, 63, 0.02);
+}
+
+.image-upload-container input[type="file"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.upload-placeholder {
+    color: #6c757d;
+    pointer-events: none;
+}
+
+.upload-placeholder i {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.upload-placeholder span {
+    font-size: 0.9rem;
+}
+
+.form-actions {
+    padding: 1.5rem 2rem;
+    background: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+
+.btn-publish {
+    background: var(--main);
+    color: white;
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-publish:hover {
+    background: var(--main-dark);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(123, 30, 63, 0.3);
+}
+
+.btn-cancel {
+    background: white;
+    color: #6c757d;
+    border: 2px solid #dee2e6;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-cancel:hover {
+    background: #f8f9fa;
+    color: var(--main-dark);
+    border-color: var(--main);
+}
+
+
+
+</style>
 {% endblock %}

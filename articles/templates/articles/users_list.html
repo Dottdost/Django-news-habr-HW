@@ -2,53 +2,224 @@
 {% block title %}Users{% endblock %}
 {% block content %}
 
-<h2 class="mb-4"><i class="bi bi-people-fill"></i> Users</h2>
+<div class="d-flex align-items-center gap-3 mb-4">
+    <div class="users-icon">
+        <i class="bi bi-people-fill"></i>
+    </div>
+    <div>
+        <h2 class="h4 mb-1 fw-bold" style="color: var(--main-dark);">Users Management</h2>
+        <p class="text-muted small mb-0">{{ users.count }} registered users</p>
+    </div>
+</div>
 
-<table class="table table-hover align-middle">
-  <thead style="background: var(--main-light);">
-    <tr>
-      <th>ID</th>
-      <th>Username</th>
-      <th>Email</th>
-      <th>Role</th>
-      <th>Status</th>
-      <th class="text-center">Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-  {% for u in users %}
-    <tr>
-      <td>{{ u.id }}</td>
-      <td class="fw-semibold">{{ u.username }}</td>
-      <td class="text-muted">{{ u.email }}</td>
+<div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-main">
+                    <tr>
+                        <th class="ps-4">User</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th class="text-center pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for u in users %}
+                <tr class="user-row">
+                    <td class="ps-4">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="user-avatar">
+                                {{ u.username|first|upper }}
+                            </div>
+                            <div>
+                                <div class="fw-semibold">{{ u.username }}</div>
+                            </div>
+                        </div>
+                    </td>
 
-      <td>
-        {% if u.is_staff %}
-          <span class="badge text-bg-primary">Staff</span>
-        {% else %}
-          <span class="badge text-bg-secondary">User</span>
-        {% endif %}
-      </td>
+                    <td>
+                        <span class="user-email">{{ u.email }}</span>
+                    </td>
 
-      <td>
-        {% if u.is_active %}
-          <span class="badge text-bg-success">Active</span>
-        {% else %}
-          <span class="badge text-bg-danger">Blocked</span>
-        {% endif %}
-      </td>
+                    <td>
+                        {% if u.is_staff %}
+                            <span class="role-badge staff">Staff</span>
+                        {% else %}
+                            <span class="role-badge user">User</span>
+                        {% endif %}
+                    </td>
 
-      <td class="text-center">
-        <a class="btn btn-sm btn-outline-primary me-1" href="{% url 'toggle_staff' u.id %}">
-          Toggle Staff
-        </a>
-        <a class="btn btn-sm btn-outline-danger" href="{% url 'toggle_active' u.id %}">
-          Toggle Active
-        </a>
-      </td>
-    </tr>
-  {% endfor %}
-  </tbody>
-</table>
+                    <td>
+                        {% if u.is_active %}
+                            <span class="status-badge active">Active</span>
+                        {% else %}
+                            <span class="status-badge blocked">Blocked</span>
+                        {% endif %}
+                    </td>
 
+                    <td class="text-center pe-4">
+                        <div class="action-buttons">
+                            <a class="btn btn-action staff-toggle" href="{% url 'toggle_staff' u.id %}" title="Toggle Staff Role">
+                                <i class="bi bi-person-gear"></i>
+                            </a>
+                            <a class="btn btn-action active-toggle" href="{% url 'toggle_active' u.id %}" title="Toggle Active Status">
+                                <i class="bi bi-person-check"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+.users-icon {
+    width: 45px;
+    height: 45px;
+    background: var(--gradient);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.users-icon i {
+    font-size: 1.3rem;
+    color: white;
+}
+
+.table-main {
+    background: var(--gradient) !important;
+    color: white;
+}
+
+.table-main th {
+    border: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 1rem 0.5rem;
+}
+
+.user-row {
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #f8f9fa;
+}
+
+.user-row:hover {
+    background-color: rgba(123, 30, 63, 0.03);
+}
+
+.user-avatar {
+    width: 36px;
+    height: 36px;
+    background: var(--main);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+}
+
+.user-email {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.role-badge {
+    padding: 0.3rem 0.7rem;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: none;
+}
+
+.role-badge.staff {
+    background: rgba(13, 110, 253, 0.1);
+    color: #0d6efd;
+}
+
+.role-badge.user {
+    background: rgba(108, 117, 125, 0.1);
+    color: #6c757d;
+}
+
+.status-badge {
+    padding: 0.3rem 0.7rem;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: none;
+}
+
+.status-badge.active {
+    background: rgba(25, 135, 84, 0.1);
+    color: #198754;
+}
+
+.status-badge.blocked {
+    background: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.4rem;
+    justify-content: center;
+}
+
+.btn-action {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-size: 0.85rem;
+    border: 1px solid transparent;
+}
+
+.staff-toggle {
+    background: rgba(13, 110, 253, 0.1);
+    color: #0d6efd;
+    border-color: rgba(13, 110, 253, 0.2);
+}
+
+.staff-toggle:hover {
+    background: #0d6efd;
+    color: white;
+    transform: scale(1.05);
+}
+
+.active-toggle {
+    background: rgba(25, 135, 84, 0.1);
+    color: #198754;
+    border-color: rgba(25, 135, 84, 0.2);
+}
+
+.active-toggle:hover {
+    background: #198754;
+    color: white;
+    transform: scale(1.05);
+}
+
+.card {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.table-responsive {
+    border-radius: 12px;
+}
+
+</style>
 {% endblock %}

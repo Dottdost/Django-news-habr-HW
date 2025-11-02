@@ -11,15 +11,112 @@
         :root {
             --main: #7b1e3f;
             --main-dark: #5a152d;
+            --main-light: #ffdfef;
+            --gradient: linear-gradient(135deg, var(--main-dark) 0%, var(--main) 100%);
         }
+
         .navbar-custom {
-            background-color: var(--main-dark);
+            background: var(--gradient);
+            box-shadow: 0 2px 15px rgba(123, 30, 63, 0.2);
+            padding: 0.6rem 0;
+            border-bottom: 2px solid var(--main-light);
         }
-        .navbar-custom .nav-link {
-            color: #fff !important;
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: white !important;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
         }
-        .navbar-custom .nav-link:hover {
-            color: #ffdfef !important;
+
+        .navbar-brand:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-1px);
+        }
+
+        .nav-link {
+            color: white !important;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 0.5rem 0.8rem !important;
+            margin: 0 0.1rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-link:hover {
+            color: var(--main-light) !important;
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-1px);
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 1px;
+            background: var(--main-light);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover::before {
+            width: 60%;
+        }
+
+        .nav-item.active .nav-link {
+            background: rgba(255,255,255,0.15);
+            color: var(--main-light) !important;
+        }
+
+        .nav-item.active .nav-link::before {
+            width: 60%;
+        }
+
+        .navbar-nav .nav-link i {
+            font-size: 0.9rem;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link:hover i {
+            transform: scale(1.1);
+        }
+
+        .username-display {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 0.3rem 0.8rem;
+            margin: 0 0.3rem;
+            border: 1px solid rgba(255,255,255,0.2);
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .create-btn {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid white;
+            border-radius: 20px;
+            padding: 0.3rem 1rem;
+            margin: 0 0.3rem;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .create-btn:hover {
+            background: white;
+            color: var(--main-dark) !important;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(255,255,255,0.2);
         }
 
         a {
@@ -33,10 +130,16 @@
             background-color: var(--main);
             border: none;
             color: white;
-
         }
         .btn-main:hover {
             background-color: var(--main-dark);
+        }
+
+        .navbar-divider {
+            width: 1px;
+            height: 20px;
+            background: rgba(255,255,255,0.2);
+            margin: 0 0.5rem;
         }
     </style>
 </head>
@@ -45,27 +148,70 @@
 
 <nav class="navbar navbar-expand-lg navbar-custom mb-4">
   <div class="container">
-    <a class="navbar-brand" href="{% url 'home' %}">Habr Clone</a>
+    <a class="navbar-brand" href="{% url 'home' %}">
+        <i class="bi bi-code-square"></i> HabrPro
+    </a>
+
     <div class="collapse navbar-collapse">
       <ul class="navbar-nav me-auto">
-
-        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">All Articles</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'categories' %}">Category</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'popular_articles' %}">Popular</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'favorites' %}">Favorites</a></li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'home' %}">
+                <i class="bi bi-house"></i> All Articles
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'categories' %}">
+                <i class="bi bi-grid"></i> Categories
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'popular_articles' %}">
+                <i class="bi bi-fire"></i> Popular
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'favorites' %}">
+                <i class="bi bi-bookmark-star"></i> Favorites
+            </a>
+        </li>
         {% if user.is_staff or user.is_superuser %}
-        <li class="nav-item"><a class="nav-link" href="{% url 'pending_articles' %}">Moderation</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'users_list' %}">Users</a></li>
+        <div class="navbar-divider"></div>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'pending_articles' %}">
+                <i class="bi bi-shield-check"></i> Moderation
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'users_list' %}">
+                <i class="bi bi-people"></i> Users
+            </a>
+        </li>
         {% endif %}
-
       </ul>
+
       <ul class="navbar-nav">
         {% if user.is_authenticated %}
-          <li class="nav-item"><a class="nav-link" href="{% url 'add_article' %}">Create</a></li>
-          <li class="nav-item"><span class="nav-link">{{ user.username }}</span></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+          <li class="nav-item">
+              <a class="nav-link create-btn" href="{% url 'add_article' %}">
+                  <i class="bi bi-plus-circle"></i> Create
+              </a>
+          </li>
+          <li class="nav-item">
+              <span class="nav-link username-display">
+                  <i class="bi bi-person-circle"></i> {{ user.username }}
+              </span>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="{% url 'logout' %}">
+                  <i class="bi bi-box-arrow-right"></i> Logout
+              </a>
+          </li>
         {% else %}
-          <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+          <li class="nav-item">
+              <a class="nav-link" href="{% url 'login' %}">
+                  <i class="bi bi-box-arrow-in-right"></i> Login
+              </a>
+          </li>
         {% endif %}
       </ul>
     </div>
