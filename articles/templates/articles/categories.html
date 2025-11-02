@@ -1,0 +1,14 @@
+{% extends 'articles/layout.html' %}
+{% block title %}Categories{% endblock %}
+
+{% block content %}
+<h2>Select a category</h2>
+
+<div class="list-group mt-3">
+    {% for value,label in categories %}
+        <a href="{% url 'category_articles' value %}" class="list-group-item list-group-item-action">
+            {{ label }}
+        </a>
+    {% endfor %}
+</div>
+{% endblock %}

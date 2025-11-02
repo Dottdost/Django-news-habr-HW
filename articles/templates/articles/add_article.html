@@ -1,51 +1,13 @@
-
+{% extends 'articles/layout.html' %}
+{% block title %}Create Article{% endblock %}
 
 {% block content %}
-<div class="container my-5 d-flex justify-content-center">
-    <div class="card shadow-lg p-4" style="max-width: 700px; border-radius: 15px; background-color: #fff8f8;">
-        <h1 class="text-center mb-4" style="color:#800000;">Add New Article</h1>
+<h2 class="mb-4" style="color:#7b1e3f;">Create Article</h2>
 
-        <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
-            {% csrf_token %}
+<form method="post" enctype="multipart/form-data" class="p-4 rounded shadow-sm bg-white">
+  {% csrf_token %}
+  {{ form.as_p }}
 
-            {% for field in form %}
-            <div class="mb-3">
-                <label class="form-label fw-bold" style="color:#800000;">{{ field.label }}</label>
-                {{ field }}
-                {% if field.help_text %}
-                <div class="form-text text-muted">{{ field.help_text }}</div>
-                {% endif %}
-                {% for error in field.errors %}
-                <div class="text-danger">{{ error }}</div>
-                {% endfor %}
-            </div>
-            {% endfor %}
-
-            <div class="d-grid mt-4">
-                <button type="submit" class="btn btn-danger btn-lg fw-bold" style="transition: transform 0.2s;">
-                    Save Article
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<style>
-input.form-control:focus,
-textarea.form-control:focus,
-select.form-select:focus {
-    border-color: #800000;
-    box-shadow: 0 0 8px rgba(128, 0, 0, 0.3);
-    transition: all 0.2s;
-}
-
-button.btn-danger:hover {
-    transform: scale(1.05);
-}
-
-input::placeholder,
-textarea::placeholder {
-    color: #80000080;
-}
-</style>
+  <button type="submit" class="btn btn-main mt-3">Publish</button>
+</form>
 {% endblock %}

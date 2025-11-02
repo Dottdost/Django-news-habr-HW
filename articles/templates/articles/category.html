@@ -1,0 +1,17 @@
+{% extends 'articles/layout.html' %}
+{% block title %}{{ category|title }}{% endblock %}
+
+{% block content %}
+<h2>Category: {{ category|title }}</h2>
+
+{% for article in articles %}
+<div class="card mb-3 shadow-sm">
+  <div class="card-body">
+    <h5><a href="{% url 'article_detail' article.pk %}" class="text-dark">{{ article.title }}</a></h5>
+    <p class="text-muted">Author: {{ article.author.username }} | Rating: {{ article.avg_rating }}</p>
+  </div>
+</div>
+{% empty %}
+<p>No articles yet in this category.</p>
+{% endfor %}
+{% endblock %}

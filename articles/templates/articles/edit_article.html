@@ -1,0 +1,10 @@
+{% extends 'articles/layout.html' %}
+{% block title %}Edit{% endblock %}
+{% block content %}
+<h2>Edit</h2>
+<form method="post" enctype="multipart/form-data" class="mt-3">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="btn btn-success">Submit for review</button>
+</form>
+{% endblock %}
